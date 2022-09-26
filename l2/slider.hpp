@@ -1,16 +1,26 @@
-#pragma once
+#include <QHBoxLayout>
+#include "slider.hpp"
 
-#include <QWidget>
-#include <QSlider>
-#include <QLabel>
+ColorSlider::ColorSlider(QWidget *parent)
+  : QWidget(parent) {
 
-class Slider : public QWidget {
-  Q_OBJECT
+  QHBoxLayout* hbox = new QHBoxLayout(this); // QHBoxLayout - line style
+         
+  slider = new QSlider(Qt::Horizontal , this); // QSlider - .. slider?
+  hbox->addWidget(slider);
+ 
+  label = new QLabel("0", this); // QLabel - output widget
+  hbox->addWidget(label);
+ 
+  connect(slider, &QSlider::valueChanged, label, 
+    static_cast<void (QLabel::*)(int)>(&QLabel::setNum));
 
-public:
-  Slider(QWidget *parent = nullptr);
+  pixmap = QPixmap("res/imgG.png");
+  picLabel = new QLabel(this);
+  picLabel->setPixmap(pixmap);
 
-private:
-  QSlider *slider;
-  QLabel *label;
-};
+  hbox->addWidget(picLabel); // output image
+
+  tempQString = label->text();
+  sliderValue = tempQString.toInt();
+}
