@@ -1,17 +1,26 @@
 #include <QHBoxLayout>
 #include "slider.hpp"
 
-Slider::Slider(QWidget *parent)
+ColorSlider::ColorSlider(QWidget *parent)
   : QWidget(parent) {
 
-  auto *hbox = new QHBoxLayout(this);
-  
-  slider = new QSlider(Qt::Horizontal, this);
+  QHBoxLayout* hbox = new QHBoxLayout(this); // QHBoxLayout - line style
+         
+  slider = new QSlider(Qt::Horizontal , this); // QSlider - .. slider?
   hbox->addWidget(slider);
-
-  label = new QLabel("0", this);
+ 
+  label = new QLabel("0", this); // QLabel - output widget
   hbox->addWidget(label);
+ 
+  connect(slider, &QSlider::valueChanged, label, 
+    static_cast<void (QLabel::*)(int)>(&QLabel::setNum));
 
-  connect(slider, &QSlider::valueChanged, label,
-	  qOverload<int>(&QLabel::setNum));
+  pixmap = QPixmap("res/imgG.png");
+  picLabel = new QLabel(this);
+  picLabel->setPixmap(pixmap);
+
+  hbox->addWidget(picLabel); // output image
+
+  tempQString = label->text();
+  sliderValue = tempQString.toInt();
 }
